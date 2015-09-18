@@ -1,4 +1,4 @@
-package logspout
+package fluentd
 
 import (
 	"encoding/json"
