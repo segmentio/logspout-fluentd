@@ -59,7 +59,7 @@ func NewFluentdAdapter(route *router.Route) (router.LogAdapter, error) {
 	return &FluentdAdapter{
 		conn:  conn,
 		route: route,
-	}
+	}, nil
 }
 
 func init() {
