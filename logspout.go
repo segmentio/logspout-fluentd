@@ -19,14 +19,17 @@ type FluentdAdapter struct {
 // Stream handles a stream of messages from Logspout. Implements router.logAdapter.
 func (adapter *FluentdAdapter) Stream(logstream chan *router.Message) {
 	for message := range logstream {
-		tag := "docker"
 		timestamp := int32(time.Now().Unix())
+		tag := "docker." + message.Container.Config.Hostname
 		record := make(map[string]string)
 		record["message"] = message.Data
 		record["docker.hostname"] = message.Container.Config.Hostname
 		record["docker.id"] = message.Container.ID
 		record["docker.image"] = message.Container.Config.Image
 		record["docker.name"] = message.Container.Name
+		for label, value := range message.Container.Config.Labels {
+			record["docker.label."+label] = value
+		}
 		data := []interface{}{tag, timestamp, record}
 
 		json, err := json.Marshal(data)
